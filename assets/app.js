@@ -251,6 +251,27 @@
     }
   }
 
+  // Back-to-top: a fragment link alone fails twice here — the old target was the
+  // sticky bar (already in view, so nothing scrolled) and a second click is a
+  // no-op because the hash is unchanged. Do it explicitly, and drop the hash.
+  function initTop() {
+    document.addEventListener('click', e => {
+      const link = e.target.closest && e.target.closest('a[href="#top"]');
+      if (!link) return;
+      e.preventDefault();
+      const still = window.matchMedia &&
+        matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' });
+      history.replaceState(null, '', location.pathname + location.search);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTop);
+  } else {
+    initTop();
+  }
+
   function qs(name, fallback) {
     const p = new URLSearchParams(location.search);
     return p.has(name) ? p.get(name) : fallback;
