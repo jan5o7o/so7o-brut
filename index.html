@@ -14,7 +14,7 @@
   <nav>
     <a href="index.html" aria-current="page">Specimen</a>
     <a href="type.html">Type it</a>
-    <a href="https://github.com/jan5o7o/neo-brutalism">Repo</a>
+    <a href="https://github.com/jan5o7o/so7o-brut">Repo</a>
   </nav>
   <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">
     <span class="sw" aria-hidden="true"></span><span class="t">Dark</span>
@@ -220,35 +220,37 @@
       <span class="hint">one python file, five fonts, one json</span>
     </div>
     <div class="copy">
-      <div>
-        <pre><span class="c"># rebuild the fonts and the SVG data</span>
-pip install fonttools
-python3 build.py
+        <div>
+          <pre><span class="c"># what is published</span>
+fonts/So7oBrutSlab-Regular.ttf
+fonts/So7oBrutSquare-Regular.ttf
+fonts/So7oBrutCondensed-Regular.ttf
+fonts/So7oBrutWide-Regular.ttf
+fonts/So7oBrutLight-Regular.ttf
+assets/glyphs.json
 
-<span class="c"># writes</span>
-site/fonts/So7oBrutSlab-Regular.ttf
-site/fonts/So7oBrutSquare-Regular.ttf
-site/fonts/So7oBrutCondensed-Regular.ttf
-site/fonts/So7oBrutWide-Regular.ttf
-site/assets/glyphs.json</pre>
-      </div>
-      <div>
-        <p style="font-size:15px;line-height:1.6">
-          <code class="inline">build.py</code> holds every glyph as a polygon.
-          Squeeze or widen a letter there and the change lands in the fonts, in
-          the specimen, and in the SVG maker at once: the site reads
-          <code class="inline">glyphs.json</code>, never a pre-baked outline.
-        </p>
-        <p style="font-size:15px;line-height:1.6">
-          Every push to <code class="inline">master</code> rebuilds the fonts in
-          GitHub Actions and deploys this site.
-        </p>
-        <div class="cta" style="margin-top:14px">
-          <a class="btn" href="https://github.com/jan5o7o/neo-brutalism">Source</a>
+<span class="c"># every glyph is a polygon on a 1000 upm grid:</span>
+<span class="c"># rectangles and 45 degree chamfers, no curves</span></pre>
+        </div>
+        <div>
+          <p style="font-size:15px;line-height:1.6">
+            The five cuts come out of one Python file that holds every glyph as a
+            polygon: squeeze or widen a letter there and the fonts, the specimen
+            and the three tools all follow. That generator is private — this repo
+            is the published half, the specimen and the type page plus the fonts
+            they need.
+          </p>
+          <p style="font-size:15px;line-height:1.6">
+            <code class="inline">MANIFEST.sha256</code> records exactly which files
+            shipped in this release, and the licence travels inside every
+            <code class="inline">.ttf</code>.
+          </p>
+          <div class="cta" style="margin-top:14px">
+            <a class="btn" href="https://github.com/jan5o7o/so7o-brut">Source</a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
   <footer class="foot">
     <span>SO7O BRUT · free to use</span>
