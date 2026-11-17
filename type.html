@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SO7O BRUT — type it</title>
+<meta name="description" content="Type anything and see it set in SO7O BRUT. Four cuts, live size, tracking and leading.">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="bar">
+  <a class="mark" href="index.html">SO7O BRUT</a>
+  <nav>
+    <a href="index.html">Specimen</a>
+    <a href="type.html" aria-current="page">Type it</a>
+    <a href="https://github.com/jan5o7o/neo-brutalism">Repo</a>
+  </nav>
+  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">
+    <span class="sw" aria-hidden="true"></span><span class="t">Dark</span>
+  </button>
+</header>
+
+<div class="wrap">
+
+  <section class="editor" style="margin-top:32px">
+
+    <form class="controls" id="controls" autocomplete="off">
+      <div class="field">
+        <label class="label" for="cut">Cut</label>
+        <select id="cut">
+          <option value="slab">Slab — chamfered, normal</option>
+          <option value="square">Square — hard corners, normal</option>
+          <option value="condensed">Condensed — chamfered, 80%</option>
+          <option value="wide">Wide — chamfered, 125%</option>
+          <option value="light">Light — chamfered, 80% weight</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label" for="text">Text</label>
+        <textarea id="text" spellcheck="false">SO7O BRUT
+NO CURVES HERE</textarea>
+      </div>
+
+      <div class="field">
+        <label class="label" for="size">Size <span class="val" id="sizeVal">96 px</span></label>
+        <input id="size" type="range" min="8" max="320" step="1" value="96">
+        <label class="check" style="margin-top:6px">
+          <input id="fit" type="checkbox"> Fit width (single line)
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="label" for="track">Tracking <span class="val" id="trackVal">0 em</span></label>
+        <input id="track" type="range" min="-8" max="40" step="1" value="0">
+      </div>
+
+      <div class="field">
+        <label class="label" for="kern">Kerning <span class="val" id="kernVal">100%</span></label>
+        <input id="kern" type="range" min="0" max="150" step="5" value="100">
+        <p class="label" style="margin:6px 0 0;text-transform:none;letter-spacing:0">
+          <span id="kernPairs">0</span> pairs in this text. The .ttf carries no
+          kern table yet, so the page does it — see “Copy CSS”.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="lead">Leading <span class="val" id="leadVal">1.00</span></label>
+        <input id="lead" type="range" min="80" max="200" step="2" value="100">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="label" for="ink">Text</label>
+          <input id="ink" type="color" value="#101010">
+          <div class="chips" id="inkChips" role="group" aria-label="Palette for the text colour"></div>
+        </div>
+        <div class="field">
+          <label class="label" for="bg">Background</label>
+          <input id="bg" type="color" value="#f2efe4">
+          <div class="chips" id="bgChips" role="group" aria-label="Palette for the background colour"></div>
+        </div>
+      </div>
+      <p class="label" id="contrast" style="margin:0 0 16px">text on background</p>
+
+      <div class="field">
+        <label class="check"><input id="uc" type="checkbox" checked> Uppercase</label>
+        <label class="check" style="margin-top:8px"><input id="dark" type="checkbox"> Swap text and background</label>
+      </div>
+
+      <div class="cta">
+        <button class="btn" type="button" id="copyCss">Copy CSS</button>
+      </div>
+    </form>
+
+    <div>
+      <div class="stage" id="stage">
+        <div class="preview" id="preview"></div>
+      </div>
+      <div class="warn" id="warn" hidden></div>
+
+      <div class="out">
+        <div class="sec-head" style="margin:24px 0 10px">
+          <h2>Embed it</h2>
+          <span class="hint">copied from this page</span>
+        </div>
+        <pre id="css"></pre>
+        <p class="label" style="margin:0">
+          The font is a plain <code class="inline">.ttf</code>, served from this site:
+          <a href="download/so7o-brut-fonts.zip" download>download all five</a>.
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="foot">
+    <span>SO7O BRUT · unicase · 102 glyphs</span>
+    <a href="https://github.com/copongcopong/team-brutalist">Forked from TEAM Brutalist</a>
+    <span class="spacer"></span>
+    <a href="index.html">← specimen</a>
+  </footer>
+
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const FILES = {
+    slab: 'So7oBrutSlab-Regular.ttf',
+    square: 'So7oBrutSquare-Regular.ttf',
+    condensed: 'So7oBrutCondensed-Regular.ttf',
+    wide: 'So7oBrutWide-Regular.ttf',
+    light: 'So7oBrutLight-Regular.ttf'
+  };
+  const LABEL = { slab: 'Slab', square: 'Square', condensed: 'Condensed', wide: 'Wide',
+                  light: 'Light' };
+
+  // Kerning lives in assets/app.js (SB.KERN, one copy for this page and the SVG
+  // maker). The .ttf carries no kern table, so this page applies it in markup.
+
+  const el = {
+    cut: document.getElementById('cut'),
+    text: document.getElementById('text'),
+    size: document.getElementById('size'),
+    sizeVal: document.getElementById('sizeVal'),
+    fit: document.getElementById('fit'),
+    track: document.getElementById('track'),
+    trackVal: document.getElementById('trackVal'),
+    kern: document.getElementById('kern'),
+    kernVal: document.getElementById('kernVal'),
+    kernPairs: document.getElementById('kernPairs'),
+    lead: document.getElementById('lead'),
+    leadVal: document.getElementById('leadVal'),
+    uc: document.getElementById('uc'),
+    ink: document.getElementById('ink'),
+    contrast: document.getElementById('contrast'),
+    bg: document.getElementById('bg'),
+    dark: document.getElementById('dark'),
+    stage: document.getElementById('stage'),
+    preview: document.getElementById('preview'),
+    warn: document.getElementById('warn'),
+    css: document.getElementById('css'),
+    copyCss: document.getElementById('copyCss')
+  };
+
+  const state = {
+    cut: SB.qs('v', 'slab'),
+    text: SB.qs('t', el.text.value),
+    size: 96
+  };
+  if (!LABEL[state.cut]) state.cut = 'slab';
+  el.cut.value = state.cut;
+  el.text.value = state.text;
+  el.kern.value = SB.qs('k', el.kern.value);
+  // On a phone the default 96 px runs off the stage, so start fitted.
+  if (innerWidth < 760) el.fit.checked = true;
+
+  // The text colours start as the page's own, then belong to the two pickers:
+  // the stage is independent of the site background from then on.
+  function hex(color) {
+    const m = color.match(/rgba?\((\d+), ?(\d+), ?(\d+)/);
+    return m ? '#' + [1, 2, 3].map(i => (+m[i]).toString(16).padStart(2, '0')).join('') : '#101010';
+  }
+  // app.js applies the stored theme on DOMContentLoaded; read it a beat earlier so
+  // the colours below are the theme's own, not the light defaults.
+  try {
+    const stored = localStorage.getItem('sb-theme');
+    if (stored === 'dark' || stored === 'light') {
+      document.documentElement.dataset.theme = stored;
+    }
+  } catch (e) { /* private mode */ }
+  const inkChips = SB.buildChips(document.getElementById('inkChips'), el.ink);
+  const bgChips = SB.buildChips(document.getElementById('bgChips'), el.bg);
+  el.ink.value = hex(getComputedStyle(document.body).color);
+  el.bg.value = hex(getComputedStyle(document.body).backgroundColor);
+  const qs0 = new URLSearchParams(location.search);
+  if (/^#[0-9a-f]{6}$/i.test(qs0.get('ink') || '')) el.ink.value = qs0.get('ink');
+  if (/^#[0-9a-f]{6}$/i.test(qs0.get('bg') || '')) el.bg.value = qs0.get('bg');
+
+  let data = null;
+  const measure = document.createElement('canvas').getContext('2d');
+
+  // release.py pins this to the published host in the public build, so a copied
+  // snippet points at the font wherever it is actually served from
+  const FONT_BASE = 'https://jan5o7o.github.io/so7o-brut/';
+
+  function baseUrl() {
+    return FONT_BASE || location.origin + location.pathname.replace(/[^/]*$/, '');
+  }
+
+  function currentFont() {
+    return 'So7o Brut ' + LABEL[state.cut];
+  }
+
+  function shown() {
+    return el.uc.checked ? el.text.value.toUpperCase() : el.text.value;
+  }
+
+  function missingChars(text) {
+    if (!data) return [];
+    const v = SB.pickVariant(data, state.cut);
+    const have = new Set(Object.keys(v.cmap));
+    const out = [];
+    for (const ch of text) {
+      if (ch === '\n' || ch === ' ') continue;
+      if (!have.has(ch) && !out.includes(ch)) out.push(ch);
+    }
+    return out;
+  }
+
+  function kernStrength() {
+    return Number(el.kern.value) / 100;
+  }
+
+  // How much air this pair gives back, in em (negative = tighter).
+  function kernValue(left, right) {
+    return SB.kern(left, right, kernStrength());
+  }
+
+  function kernPairsIn(text) {
+    let n = 0;
+    for (const line of text.split('\n')) {
+      for (let i = 1; i < line.length; i++) {
+        if (kernValue(line[i - 1], line[i])) n++;
+      }
+    }
+    return n;
+  }
+
+  function kernEm(line) {
+    let em = 0;
+    for (let i = 1; i < line.length; i++) em += kernValue(line[i - 1], line[i]);
+    return em;
+  }
+
+  // Text into spans: only the second glyph of a kerned pair is wrapped, so the
+  // markup stays cheap and the copied text stays whole.
+  function kernedFragment(text) {
+    const frag = document.createDocumentFragment();
+    text.split('\n').forEach((line, li) => {
+      if (li) frag.append('\n');
+      for (let i = 0; i < line.length; i++) {
+        const v = i ? kernValue(line[i - 1], line[i]) : 0;
+        if (!v) {
+          frag.append(line[i]);
+          continue;
+        }
+        const span = document.createElement('span');
+        span.style.marginLeft = v.toFixed(4) + 'em';
+        span.textContent = line[i];
+        frag.append(span);
+      }
+    });
+    return frag;
+  }
+
+  function fitSize(text) {
+    if (!el.fit.checked) return state.size;
+    measure.font = state.size + 'px "' + currentFont() + '"';
+    let widest = 1;
+    for (const line of text.split('\n')) {
+      const w = measure.measureText(line || ' ').width + kernEm(line) * state.size;
+      widest = Math.max(widest, w);
+    }
+    const avail = Math.max(40, el.stage.clientWidth - 48);
+    return SB.clamp(state.size * avail / widest, 6, 320);
+  }
+
+  function render() {
+    // the select is the source of truth for the cut: state.cut only seeds it, so
+    // a stale state.cut would keep the preview on the first cut forever
+    if (LABEL[el.cut.value]) state.cut = el.cut.value;
+    const text = shown();
+    const size = fitSize(text) || state.size;
+
+    el.sizeVal.textContent = Math.round(size) + ' px';
+    el.trackVal.textContent = (Number(el.track.value) / 100).toFixed(2) + ' em';
+    el.kernVal.textContent = el.kern.value + '%';
+    el.kernPairs.textContent = kernPairsIn(text);
+    el.leadVal.textContent = (Number(el.lead.value) / 100).toFixed(2);
+
+    el.preview.style.fontFamily = '"' + currentFont() + '", Impact, sans-serif';
+    el.preview.style.fontSize = size + 'px';
+    el.preview.style.letterSpacing = (Number(el.track.value) / 100) + 'em';
+    el.preview.style.lineHeight = (Number(el.lead.value) / 100);
+    el.preview.textContent = '';
+    el.preview.append(kernedFragment(text));
+
+    const ink = el.dark.checked ? el.bg.value : el.ink.value;
+    const ground = el.dark.checked ? el.ink.value : el.bg.value;
+    el.stage.style.background = ground;
+    el.stage.style.color = ink;
+    el.preview.style.color = ink;
+    SB.markChips(inkChips, el.ink.value);
+    SB.markChips(bgChips, el.bg.value);
+    const cr = SB.contrast(ink, ground);
+    el.contrast.textContent = 'text on background ' + cr.toFixed(1) + ':1' +
+      (cr < 3 ? ' — too low to read' : cr < 4.5 ? ' — large text only' : '');
+    el.contrast.style.color = cr < 4.5 ? 'var(--accent)' : '';
+
+    const miss = missingChars(text);
+    el.warn.hidden = !miss.length;
+    if (miss.length) {
+      el.warn.innerHTML = '<b>Not in the font:</b> ' +
+        miss.map(c => c + ' (' + SB.hex(c) + ')').join(', ') +
+        ' — those slots fall back to nothing in the SVG maker.';
+    }
+
+    el.css.textContent =
+      '@font-face {\n' +
+      '  font-family: "So7o Brut ' + LABEL[state.cut] + '";\n' +
+      '  src: url("' + baseUrl() + 'fonts/' + FILES[state.cut] + '") format("truetype");\n' +
+      '  font-display: block;\n' +
+      '  font-kerning: normal;\n' +
+      '}\n\n' +
+      '/* kerning: the .ttf carries no kern table, so this page kerns in markup —\n' +
+      '   ' + Object.keys(SB.KERN).length + ' pairs at ' + el.kern.value + '%, the second glyph of\n' +
+      '   each pair wrapped in a span with a negative margin. */\n\n' +
+      '.headline {\n' +
+      '  font-family: "So7o Brut ' + LABEL[state.cut] + '", Impact, sans-serif;\n' +
+      '  font-size: ' + Math.round(size) + 'px;\n' +
+      '  line-height: ' + (Number(el.lead.value) / 100).toFixed(2) + ';\n' +
+      '  letter-spacing: ' + (Number(el.track.value) / 100) + 'em;\n' +
+      '  color: ' + ink + ';\n' +
+      '  background: ' + ground + ';\n' +
+      '}';
+
+    const q = new URLSearchParams({ v: state.cut, t: el.text.value, k: el.kern.value,
+                                    ink: el.ink.value, bg: el.bg.value });
+    history.replaceState(null, '', location.pathname + '?' + q);
+  }
+
+  for (const input of [el.cut, el.text, el.size, el.fit, el.track, el.kern,
+                       el.lead, el.uc, el.ink, el.bg, el.dark]) {
+    input.addEventListener('input', render);
+    input.addEventListener('change', render);
+  }
+  el.size.addEventListener('input', () => { state.size = Number(el.size.value); render(); });
+  el.uc.addEventListener('change', render);
+
+  el.copyCss.addEventListener('click', () => SB.copy(el.css.textContent));
+
+  window.addEventListener('resize', render);
+
+  document.fonts.ready.then(render);
+
+  SB.loadData().then(d => {
+    data = d;
+    render();
+  }).catch(() => render());
+
+  render();
+})();
+</script>
+</body>
+</html>

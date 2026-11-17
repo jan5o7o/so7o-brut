@@ -1,0 +1,630 @@
+/* SO7O BRUT — shared site styles.
+   Straight lines, hard borders, flat fills, four font cuts.
+
+   Colours are declared once per token with light-dark(<light>, <dark>), so the
+   theme is a single property: color-scheme. The head of every page has no
+   script for it — the shell covers a system preference, and assets/app.js sets
+   data-theme only once the visitor picks one, which then survives reloads. */
+
+/* The @font-face block below is generated: build.py writes it on every run with
+   a content hash on each url, so a rebuilt font can never be served stale. Edit
+   the fonts, not this block — hand edits are overwritten on the next build. */
+/* build:fonts:begin */
+@font-face {
+  font-family: "So7o Brut Slab";
+  src: url("../fonts/So7oBrutSlab-Regular.ttf?v=18a595bc") format("truetype");
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: "So7o Brut Square";
+  src: url("../fonts/So7oBrutSquare-Regular.ttf?v=8ccb365a") format("truetype");
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: "So7o Brut Condensed";
+  src: url("../fonts/So7oBrutCondensed-Regular.ttf?v=e13615f3") format("truetype");
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: "So7o Brut Wide";
+  src: url("../fonts/So7oBrutWide-Regular.ttf?v=5c6bb9ee") format("truetype");
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: "So7o Brut Light";
+  src: url("../fonts/So7oBrutLight-Regular.ttf?v=78f6a27b") format("truetype");
+  font-weight: 400; font-style: normal; font-display: block;
+}
+/* build:fonts:end */
+
+:root {
+  color-scheme: light dark;
+
+  --paper: #f2efe4;
+  --paper: light-dark(#f2efe4, #0e0e0d);
+  --paper-2: #e4dfcd;
+  --paper-2: light-dark(#e4dfcd, #1b1b18);
+  --card: #fbf9f1;
+  --card: light-dark(#fbf9f1, #151513);
+  --ink: #101010;
+  --ink: light-dark(#101010, #f2efe4);
+  --dim: #6b675c;
+  --dim: light-dark(#6b675c, #8b8676);
+  --accent: #ff3b00;
+  --accent: light-dark(#ff3b00, #ff5c2b);
+  --on-accent: #101010;
+  --on-accent: light-dark(#101010, #0e0e0d);
+  --hi: #e8ff2b;
+  --hi: light-dark(#e8ff2b, #d9f227);
+  --on-hi: #101010;
+  --field: #fff;
+  --field: light-dark(#fff, #0a0a09);
+  --code-bg: #101010;
+  --code-bg: light-dark(#101010, #1d1d1a);
+  --code-fg: #ece9de;
+  --code-fg: light-dark(#ece9de, #e9e6da);
+  --code-dim: #8c8879;
+  --code-dim: light-dark(#8c8879, #7e7a6c);
+
+  --rule: 3px solid var(--ink);
+  --rule-2: 2px solid var(--ink);
+  --mono: ui-monospace, SFMono-Regular, "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  --type-slab: "So7o Brut Slab", Impact, sans-serif;
+  --type-square: "So7o Brut Square", Impact, sans-serif;
+  --type-condensed: "So7o Brut Condensed", Impact, sans-serif;
+  --type-wide: "So7o Brut Wide", Impact, sans-serif;
+  --type-light: "So7o Brut Light", Impact, sans-serif;
+}
+
+/* The visitor's choice wins over the system's, and both are the same block. */
+:root[data-theme="dark"] { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--paper);
+  /* Hold the scrollbar's width open even when the page is short. Without it,
+     dragging the size slider past the window height adds a scrollbar and the
+     whole layout jumps 15 px narrower - scrollbar-gutter alone did not reserve
+     it in Chrome, overflow-y: scroll does. macOS draws overlay scrollbars, so
+     this costs nothing there. */
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
+}
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; }
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 20px 100px; }
+
+.mono { font-family: var(--mono); }
+
+.label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ---------------------------------------------------------------- top bar */
+.bar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px;
+  padding: 10px 20px;
+  background: var(--paper);
+  border-bottom: var(--rule);
+}
+.bar .mark {
+  font-family: var(--type-slab);
+  font-size: 20px; line-height: 1;
+  text-decoration: none; letter-spacing: .01em;
+  white-space: nowrap;
+}
+.bar nav { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.bar nav a {
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  text-decoration: none; padding: 5px 9px; border: 2px solid transparent;
+}
+.bar nav a:hover { border-color: var(--ink); }
+.bar nav a[aria-current="page"] {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.bar .gh {
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  text-decoration: none; border-bottom: 2px solid var(--ink); padding-bottom: 1px;
+}
+
+/* theme switch: a flat swatch of the current ink, labelled with the mode
+   clicking gives you */
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 5px 9px 5px 7px;
+  color: var(--ink); background: transparent;
+  border: 2px solid var(--ink); border-radius: 0;
+  cursor: pointer;
+}
+.theme-toggle .sw {
+  width: 9px; height: 9px; flex: none;
+  background: var(--ink); border: 0;
+}
+.theme-toggle:hover { background: var(--ink); color: var(--paper); }
+.theme-toggle:hover .sw { background: var(--paper); }
+
+/* font cuts */
+.f-slab { font-family: var(--type-slab); }
+.f-square { font-family: var(--type-square); }
+.f-condensed { font-family: var(--type-condensed); }
+.f-wide { font-family: var(--type-wide); }
+.f-light { font-family: var(--type-light); }
+
+/* ---------------------------------------------------------------- buttons */
+/* Flat: a border, a fill on hover, and no offset shadow anywhere. Hierarchy
+   comes from solid fills (accent, hi, ink), not from fake depth. */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; text-decoration: none;
+  padding: 8px 12px;
+  color: var(--ink); background: transparent;
+  border: 2px solid var(--ink); border-radius: 0;
+  cursor: pointer;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn:active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.accent { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.accent:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.btn.hi { background: var(--hi); border-color: var(--hi); color: var(--on-hi); }
+.btn.hi:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+/* ---------------------------------------------------------------- hero */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, .55fr);
+  gap: 28px;
+  align-items: start;
+  padding: 48px 0 24px;
+  border-bottom: var(--rule);
+}
+.hero h1 {
+  font-family: var(--type-slab);
+  font-size: clamp(52px, 11.5vw, 178px);
+  line-height: .8;
+  letter-spacing: -.02em;
+  margin: 0;
+  text-transform: uppercase;
+}
+.hero .lede { font-size: 14px; max-width: 42ch; margin: 0 0 20px; }
+/* an editorial rule instead of a card: structure without another box */
+.hero > div:last-child { border-left: var(--rule); padding-left: 26px; }
+.hero .lede b { background: var(--hi); color: var(--on-hi); font-weight: 400; }
+.facts { list-style: none; margin: 0 0 24px; padding: 0; border-top: 2px solid var(--ink); }
+.facts li {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 6px 0; border-bottom: 2px solid var(--ink);
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+}
+.facts li b { font-family: var(--type-square); font-size: 18px; letter-spacing: 0; line-height: 1; }
+.facts.zebra li { padding: 6px 9px; }
+.facts.zebra li:nth-child(odd) { background: var(--paper-2); }
+.facts-2 { columns: 2; column-gap: 48px; margin: 0; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.badge {
+  display: inline-block;
+  background: var(--accent); color: var(--on-accent);
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  padding: 5px 9px;
+  margin-bottom: 18px;
+}
+
+/* ---------------------------------------------------------------- sections */
+section { margin-top: 56px; }
+.sec-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px;
+  border-bottom: var(--rule); padding-bottom: 8px; margin-bottom: 22px;
+}
+.sec-head h2 {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .2em;
+  text-transform: uppercase; margin: 0;
+  display: flex; align-items: center; gap: 9px;
+}
+.sec-head h2::before {
+  content: ""; width: 9px; height: 9px; flex: none;
+  background: var(--accent);
+}
+.sec-head .hint { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.sec-head .spacer { margin-left: auto; }
+
+/* ---------------------------------------------------------------- variant block */
+.variant {
+  border: var(--rule); background: var(--card);
+  padding: 18px; margin-bottom: 40px;
+}
+
+/* a compact index of the five cuts, above the specimen blocks */
+.cut-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+.cut-list a {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+  text-transform: uppercase; text-decoration: none;
+  padding: 7px 10px; border: 2px solid var(--ink); color: var(--ink);
+}
+.cut-list a:hover { background: var(--ink); color: var(--paper); }
+.vhead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 18px; }
+.vhead .vname {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .2em;
+  text-transform: uppercase; margin: 0;
+}
+.vhead .vnote { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.vhead .spacer { margin-left: auto; }
+.vhero {
+  font-size: clamp(48px, 12vw, 150px);
+  line-height: .84;
+  letter-spacing: -.015em;
+  margin: 10px 0 6px;
+  overflow-wrap: anywhere;
+}
+.vline {
+  font-size: clamp(20px, 3.1vw, 34px);
+  line-height: 1.12;
+  margin: 0 0 4px;
+  overflow-wrap: anywhere;
+}
+.vline.dim { color: var(--dim); }
+
+/* glyph grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 5px;
+  margin-top: 16px;
+}
+.cell {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  aspect-ratio: 1;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 6px 4px 4px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.cell:hover { background: var(--hi); color: var(--on-hi); }
+.cell .ch { font-size: clamp(26px, 4.2vw, 42px); line-height: 1; font-family: inherit; }
+.cell .hex {
+  position: absolute; bottom: 2px; left: 0; right: 0;
+  text-align: center; font-family: var(--mono); font-size: 8px;
+  letter-spacing: .06em; color: var(--dim);
+}
+.cell:hover .hex { color: var(--on-hi); }
+.cell.blank { cursor: default; background: transparent; border-style: dashed; }
+.cell.blank:hover { background: transparent; }
+
+/* ---------------------------------------------------------------- specimen extras */
+.waterfall p { margin: 0 0 2px; line-height: 1; white-space: nowrap; overflow: hidden; }
+
+.copy {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+.copy p { margin: 0; font-size: 19px; line-height: 1.14; }
+.copy .big { display: block; font-size: clamp(32px, 5vw, 54px); line-height: .95; margin-bottom: 10px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.compare figure { margin: 0; }
+.compare img, .compare .render {
+  display: block; width: 100%;
+  background: #000; border: var(--rule);
+}
+.compare .render {
+  aspect-ratio: 1672 / 941;
+  display: grid; place-items: center;
+  color: #d8d6cf;
+  font-size: clamp(46px, 12vw, 128px); line-height: 1;
+}
+.compare figcaption { margin-top: 6px; }
+
+pre, code { font-family: var(--mono); }
+pre {
+  background: var(--code-bg); color: var(--code-fg);
+  border: var(--rule); padding: 14px 16px; margin: 0;
+  font-size: 12px; line-height: 1.65; overflow: auto;
+}
+pre .c { color: var(--code-dim); }
+code.inline { background: var(--paper-2); border: 1px solid var(--ink); padding: 0 4px; }
+
+footer.foot {
+  margin-top: 72px; padding-top: 16px; border-top: var(--rule);
+  display: flex; flex-wrap: wrap; gap: 10px 28px;
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+}
+footer.foot a { text-decoration: none; border-bottom: 2px solid var(--ink); }
+footer.foot .spacer { margin-left: auto; }
+
+/* ---------------------------------------------------------------- controls */
+.editor {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.controls {
+  border: var(--rule); background: var(--card);
+  padding: 16px;
+  position: sticky; top: 74px;
+}
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+.field > .label { display: block; margin-bottom: 5px; }
+.field select, .field textarea, .field input[type="text"], .field input[type="number"] {
+  width: 100%; font-family: var(--mono); font-size: 12px;
+  color: var(--ink); background: var(--field);
+  border: 2px solid var(--ink); border-radius: 0;
+  padding: 7px 8px;
+}
+.field textarea { min-height: 76px; resize: vertical; line-height: 1.5; }
+.field input[type="color"] {
+  width: 100%; height: 34px; padding: 0; border: 2px solid var(--ink);
+  background: var(--field); border-radius: 0; cursor: pointer;
+}
+
+/* Off-screen but real: a display:none file input cannot be opened from its
+   <label> on iOS Safari, which silently breaks 'Add image'. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* palette swatches: the names/hex are in title + aria-label, the ring marks the
+   current value, and the border keeps pale tints visible on a pale panel */
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.chip {
+  width: 22px; height: 22px; padding: 0; flex: none;
+  border: 2px solid var(--ink); border-radius: 0;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] {
+  outline: 3px solid var(--accent); outline-offset: 1px;
+}
+.field input[type="range"] {
+  width: 100%; accent-color: var(--accent); height: 24px;
+}
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.val { float: right; color: var(--ink); letter-spacing: .08em; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+.stage {
+  border: var(--rule); background: var(--field);
+  min-height: 420px;
+  padding: 24px;
+  overflow: auto;
+}
+/* .stage's colours come from the page controls now (type.html, svg.html), not
+   from a theme class. */
+
+.preview {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  line-height: 1.02;
+  margin: 0;
+}
+.preview:empty::before {
+  content: "type something…";
+  font-family: var(--mono); font-size: 13px; color: var(--dim);
+}
+
+.warn {
+  margin-top: 12px; border: 2px solid var(--accent); background: var(--field);
+  padding: 8px 10px; font-size: 11px; letter-spacing: .06em;
+}
+.warn b { color: var(--accent); }
+
+.stage svg { display: block; max-width: 100%; height: auto; }
+
+.out {
+  margin-top: 22px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px;
+}
+.out textarea {
+  width: 100%; min-height: 150px;
+  font-family: var(--mono); font-size: 11px;
+  border: 2px solid var(--ink); background: var(--field); color: var(--ink);
+  padding: 10px; border-radius: 0; resize: vertical;
+}
+.out .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---------------------------------------------------------------- poster */
+.poster-stage { display: grid; place-items: start center; }
+.poster-frame { position: relative; width: 100%; line-height: 0; }
+#poster, #overlay {
+  display: block; width: 100%; height: auto;
+}
+#poster { border: var(--rule); background: #fff; }
+/* handles live on their own canvas so they are never in the export; touch-action
+   keeps a drag from scrolling the page under your finger */
+#overlay {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  cursor: default; touch-action: none;
+}
+.poster-stage { overscroll-behavior: contain; }
+#overlay.on { cursor: move; }
+.poster-stage.dropping { outline: 3px dashed var(--accent); outline-offset: -6px; }
+.more > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+.more > summary::-webkit-details-marker { display: none; }
+.more > summary::before {
+  content: "+"; font-size: 12px; line-height: 1; width: 12px; display: inline-block;
+}
+.more[open] > summary::before { content: "−"; }
+.more[open] > summary { margin-bottom: 10px; }
+
+.image-head { margin-top: 14px; }
+.image-head .cta { margin: 0; }
+/* the two buttons carry equal weight: one adds, one removes */
+.image-head .cta .btn { flex: 1 1 0; justify-content: center; }
+
+.stage-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin-top: 12px;
+}
+.stage-actions .label { margin-left: auto; }
+.lines { display: grid; gap: 8px; }
+.line {
+  border: 2px solid var(--ink); background: var(--field);
+  padding: 8px; display: grid; gap: 6px;
+}
+.line input[type="text"] {
+  width: 100%; font-family: var(--mono); font-size: 12px;
+  color: var(--ink); background: var(--field);
+  border: 2px solid var(--ink); border-radius: 0; padding: 6px 7px;
+}
+.lrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.lrow select, .lrow input[type="number"] {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink); background: var(--field);
+  border: 2px solid var(--ink); border-radius: 0; padding: 4px 5px;
+}
+.lrow input[type="number"] { width: 62px; }
+/* per-line colour swatches: the button opens the palette popover */
+.swatch {
+  width: 30px; height: 26px; padding: 0; flex: none;
+  border: 2px solid var(--ink); border-radius: 0; cursor: pointer;
+}
+.swatch:hover { border-color: var(--accent); }
+.swatch-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim);
+}
+
+.palette-pop {
+  position: fixed; z-index: 300;
+  background: var(--card); border: 3px solid var(--ink);
+  padding: 8px; max-width: 250px;
+}
+.palette-pop .chips { margin: 0; }
+.pop-custom {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 8px; padding-top: 8px; border-top: 2px solid var(--ink);
+  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--dim);
+}
+.pop-custom input[type="color"] {
+  width: 30px; height: 26px; padding: 0; margin-left: auto;
+  border: 2px solid var(--ink); border-radius: 0; background: var(--field);
+  cursor: pointer;
+}
+.lrow .mini {
+  font-family: var(--mono); font-size: 12px; line-height: 1;
+  width: 26px; height: 26px; padding: 0;
+  color: var(--ink); background: transparent;
+  border: 2px solid var(--ink); border-radius: 0; cursor: pointer;
+}
+.lrow .mini:hover { background: var(--ink); color: var(--paper); }
+.lrow .mini.del {
+  width: auto; padding: 0 8px;
+  font-size: 9px; letter-spacing: .08em; color: var(--accent);
+  border-color: var(--accent);
+}
+.lrow .mini.del:hover { background: var(--accent); color: var(--on-accent); }
+
+/* toast */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 8px 14px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  z-index: 200;
+  animation: pop .14s ease-out;
+}
+@keyframes pop { from { transform: translate(-50%, 8px); opacity: 0 } to { transform: translate(-50%, 0); opacity: 1 } }
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
+}
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero > div:last-child { border-left: 0; padding-left: 0; border-top: var(--rule); padding-top: 20px; }
+  .editor { grid-template-columns: 1fr; }
+  .controls { position: static; }
+  .compare { grid-template-columns: 1fr; }
+}
+
+/* Narrow: the bar gets two rows, the mark and the switch first, nav beneath. */
+/* Phones: the bar folds to two rows (mark + switch, then nav), controls get
+   real tap targets, and the specimen's block headers stack so the two buttons
+   stop wrapping unevenly against the notes. */
+@media (max-width: 720px) {
+  .wrap { padding: 0 16px 80px; }
+  .bar { gap: 8px 12px; padding: 8px 16px; }
+  .bar .mark { font-size: 18px; }
+  .bar nav { order: 3; width: 100%; margin-left: 0; gap: 2px; }
+  .bar nav a { padding: 9px 8px; font-size: 10px; }
+  .theme-toggle { margin-left: auto; padding: 9px 10px; }
+
+  .hero { padding: 28px 0 18px; }
+  .hero h1 { overflow-wrap: anywhere; }
+  .facts-2 { columns: 1; }
+  section { margin-top: 40px; }
+
+  .sec-head { gap: 6px 12px; }
+  .sec-head .hint { font-size: 9px; }
+
+  .btn { padding: 12px 14px; }
+  .vhead { gap: 8px 10px; }
+  .vhead .vname, .vhead .vnote { width: 100%; }
+  .vhead .spacer { display: none; }
+  .variant { padding: 14px; margin-bottom: 26px; }
+
+  .grid { grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: 4px; }
+  .cell { padding: 4px 3px 3px; }
+
+  .controls { padding: 14px; }
+  .field input[type="range"] { height: 32px; }
+  .chip { width: 28px; height: 28px; }
+  .stage { padding: 16px; min-height: 240px; }
+  .compare { gap: 14px; }
+
+  /* long URLs in the embed CSS should wrap, not hide behind a scrollbar */
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+  /* iOS zooms the whole page when a form control smaller than 16 px takes
+     focus, and does not zoom back out. 16 px is the threshold, not a taste. */
+  .field select, .field textarea, .field input[type="text"],
+  .field input[type="number"], .out textarea { font-size: 16px; }
+
+  footer.foot { gap: 8px 18px; padding-top: 14px; }
+  footer.foot a { padding: 4px 0; }
+  footer.foot .spacer { display: none; }
+}
+
+/* Small phones: the display sizes are set by the longest word, not by taste. */
+@media (max-width: 430px) {
+  .hero h1 { font-size: clamp(54px, 17vw, 84px); }
+  .vhero { font-size: clamp(40px, 12.5vw, 60px); }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); }
+  .cell .hex { font-size: 7px; }
+  .copy .big { font-size: clamp(24px, 8vw, 40px); }
+  .facts li { font-size: 10px; }
+  .facts li b { font-size: 16px; }
+}
