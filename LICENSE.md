@@ -1,6 +1,7 @@
 # Licence
 
 **So7o Brut** — five cuts, 102 glyphs, derived from the TEAM wordmark.
+Copyright (c) 2026 Jan So7o (https://jan.so7o.dev).
 
 - **The fonts** (`fonts/*.ttf`) are licensed under the [SIL Open Font License
   1.1](OFL.txt) with Reserved Font Name **So7o Brut**. Use them, embed them, ship
