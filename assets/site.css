@@ -210,6 +210,11 @@ a { color: inherit; }
   margin: 0;
   text-transform: uppercase;
 }
+.tagline {
+  font-family: var(--mono); font-size: 12px; line-height: 1.55;
+  letter-spacing: .02em; color: var(--dim);
+  max-width: 46ch; margin: 18px 0 0; text-transform: none;
+}
 .hero .lede { font-size: 14px; max-width: 42ch; margin: 0 0 20px; }
 /* an editorial rule instead of a card: structure without another box */
 .hero > div:last-child { border-left: var(--rule); padding-left: 26px; }
